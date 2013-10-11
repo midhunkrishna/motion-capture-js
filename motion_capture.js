@@ -4,8 +4,13 @@ var motionCapture = {
             alert("cannot capture video camera");
         }else{
             this.getUserVideo();
+            this.initializeSpace();
             this.drawVideoOntoCanvas(videoCanvas, blendModeDiffCanvas);
         }
+    },
+
+    initializeSpace: function(){
+        this.space_x = [0, 320, 640];
     },
 
     drawVideoOntoCanvas: function(videoCanvas, blendModeDiffCanvas){
@@ -32,6 +37,7 @@ var motionCapture = {
         setTimeout(function(){
             _this.drawVideo();
             _this.blend();
+            _this.checkLeftRight();
             _this.updateCanvases();
         }, 1000/60);
     },
@@ -88,6 +94,29 @@ var motionCapture = {
         this.bw_blendModeDifference(blendedResultImage.data, sourceImage.data, lastImage.data);
         this.contextBlendCanvas.putImageData(blendedResultImage, 0, 0);
         lastImage = sourceImage;
+    },
+
+    checkLeftRight: function(){
+        for(r=0; r<2; r++){
+            var iterand = r;
+            var blendedData = this.contextBlendCanvas.getImageData(r*320, 0, 320,480);
+            var average = 0;
+            var i = 0;
+            try{
+                while(i < blendedData.data.length * 0.25){
+                    average += (blendedData.data[i*4] + blendedData.data[i*4+1] + blendedData.data[i*4+2]) / 3;
+                    i++;
+                }
+                average = Math.round(average/(blendedData.data.length/4));
+                console.log(average);
+                if(average > 10){
+                    if(iterand == 0) $('.direction-alert').html('left');
+                    if(iterand == 1) $('.direction-alert').html('right');
+                }
+            }catch(err){
+                console.log(err);
+            }
+        }
     },
 
     webcamError: function(){

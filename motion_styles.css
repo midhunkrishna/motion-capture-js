@@ -1,4 +1,22 @@
 
 .webcam{
-    display: none;
+    display : none;
+
+}
+
+.direction-alert{
+    font-size: 100px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-shadow: 2px 2px #ff0000;
+}
+
+#canvas-source{
+    display:none;
+
+}
+
+#canvas-target{
+    display:none;
 }
